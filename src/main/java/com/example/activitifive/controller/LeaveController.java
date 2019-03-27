@@ -75,7 +75,7 @@ public class LeaveController {
 
 
     /**
-     * 完成个人任务（填写请假单）
+     * 5、完成个人任务（填写请假单）
      *
      * @param leave
      * @return
@@ -89,7 +89,7 @@ public class LeaveController {
 
 
     /**
-     * 直接主管审批
+     * 6、直接主管审批
      *
      * @param leave
      * @return
@@ -101,7 +101,7 @@ public class LeaveController {
     }
 
     /**
-     * 部门主管审批
+     * 7、部门主管审批
      *
      * @param leave
      * @return
@@ -113,16 +113,38 @@ public class LeaveController {
     }
 
     /**
-     * 查看历史记录
+     * 8、查询历史流程实例
      *
-     * @param userId
      * @return
      */
-    @RequestMapping(value = "/findClosed", method = RequestMethod.GET)
-    public Map<String, Object> findClosed(String userId) {
-        Map<String, Object> resultMap = leaveService.findClosed(userId);
+    @RequestMapping(value = "/findHistoricProcessInstance", method = RequestMethod.GET)
+    public Map<String, Object> findHistoricProcessInstance() {
+        Map<String, Object> resultMap = leaveService.findHistoricProcessInstance();
         return resultMap;
     }
 
 
+    /**
+     * 9、查询历史活动
+     *
+     * @return
+     */
+    @RequestMapping(value = "/findHisActivitiList", method = RequestMethod.GET)
+    public Map<String, Object> findHisActivitiList(String processInstanceId) {
+        Map<String, Object> resultMap = leaveService.findHisActivitiList(processInstanceId);
+        return resultMap;
+    }
+
+
+
+    /**
+     * 9、查询历史任务
+     *
+     * @return
+     */
+    @RequestMapping(value = "/findHisTaskList", method = RequestMethod.GET)
+    public Map<String, Object> findHisTaskList(String processInstanceId) {
+        Map<String, Object> resultMap = leaveService.findHisTaskList(processInstanceId);
+        return resultMap;
+    }
 }

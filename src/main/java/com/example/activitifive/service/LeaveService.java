@@ -4,7 +4,9 @@ import com.example.activitifive.controller.LeaveController;
 import com.example.activitifive.model.Leave;
 import com.example.activitifive.model.ProcessDefinitionModel;
 import org.activiti.engine.*;
+import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
@@ -51,6 +53,9 @@ public class LeaveService {
     /**
      * 1、部署流程
      *
+     *    @1、将流程的文件以二进制的形式保存起来录入数据到： act_ge_bytearray 用于通用的流程定义和流程资源
+     *    @2、生成部署数据： ACT_RE_DEPLOYMENT
+     *    @3、生成流程定义数据： ACT_RE_PROCDEF
      */
     public Map<String, Object> deployProcessDefinition(){
 
@@ -116,8 +121,10 @@ public class LeaveService {
     /**
      * 3、启动流程
      *
-     * @param userId
-     * @return
+     *  @1、给指定的用户创建流程任务： act_ru_task
+     *  @2、生成运行时流程执行实例： act_ru_execution 并生成对应的流程实列记录：ACT_HI_PROCINST
+     *  @3、生成运行时用户关系实例： act_hi_identitylink
+     *
      */
     public Map<String, Object> start(@RequestParam String userId) {
         Map<String, Object> vars = new HashMap<>();
@@ -181,10 +188,11 @@ public class LeaveService {
 
 
     /**
-     * 完成个人任务（填写请假单）
+     * 5、完成个人任务（填写请假单）
      *
-     * @param leave
-     * @return
+     *  @1、根据用户任务创建历史流程记录： ACT_HI_ACTINST
+     *  @2、改变用户任务的Assign值，将任务交给下一位用户（初审主管）执行： ACT_RU_TASK
+     *
      */
     public Map<String, Object> apply(@RequestBody Leave leave) {
         Task task = taskService.createTaskQuery().taskId(leave.getTaskId()).singleResult();
@@ -207,10 +215,10 @@ public class LeaveService {
 
 
     /**
-     * 直接主管审批
+     * 6、直接主管审批
      *
-     * @param leave
-     * @return
+     *  @1、根据用户任务创建历史流程记录： ACT_HI_ACTINST
+     *  @2、直接主管审核后，改变用户任务的Assign值，将任务交给下一位用户（复审主管）执行： ACT_RU_TASK
      */
     public Map<String, Object> approve1(@RequestBody Leave leave) {
 
@@ -234,10 +242,9 @@ public class LeaveService {
     }
 
     /**
-     * 部门主管审批
+     * 7、部门主管审批
      *
-     * @param leave
-     * @return
+     *  @1、复审主管审核后，清空该任务对应的所有运行时的数据： ACT_RU_TASK、ACT_RU_VARIABLE、ACT_RU_EXECUTION、ACT_RU_IDENTITYLINK
      */
     public Map<String, Object> approve2(@RequestBody Leave leave) {
         Task task = taskService.createTaskQuery().taskId(leave.getTaskId()).singleResult();
@@ -253,22 +260,98 @@ public class LeaveService {
     }
 
     /**
-     * 查看历史记录
+     * 8、查询历史流程实例 act_hi_procinst
      *
-     * @param userId
-     * @return
+     *    查询历史流程实例，就是查找按照某个流程定义的规则一共执行了多少次流程，对应的数据库表：act_hi_procinst
      */
-    public Map<String, Object> findClosed(String userId) {
+    public Map<String, Object> findHistoricProcessInstance() {
         HistoryService historyService = processEngine.getHistoryService();
 
-        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().processDefinitionKey("leave1").variableValueEquals("leave.userId", userId).list();
-        List<Leave> leaves = new ArrayList<>();
-        for (HistoricProcessInstance pi : list) {
-            leaves.add((Leave) pi.getProcessVariables().get("leave"));
+        //List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().processDefinitionKey("leave").variableValueEquals("leave.userId", userId).list();
+        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().processDefinitionKey("leave").list();
+        //获取特定的流程定义历史数据
+        //List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery().processDefinitionId("testVariables:2:1704").list();
+
+        Map<String, Object> temp =  new HashMap<>();
+        if(list != null && list.size()>0){
+            int index = 0;
+            for(HistoricProcessInstance hi:list){
+                Map<String, Object> item =  new HashMap<>();
+                item.put("历史流程id：",hi.getId());
+                item.put("历史开始时间：",hi.getStartTime());
+                item.put("历史结束时间：",hi.getEndTime());
+                temp.put("item"+index,item);
+                index++;
+            }
         }
+
         Map<String, Object> resultMap =  new HashMap<>();
-        resultMap.put("datas", leaves);
+        resultMap.put("datas", temp);
         return resultMap;
     }
+
+    /**/
+
+    /**9、查询历史活动 act_hi_actinst
+     *       查询历史活动，就是查询某一次流程的执行一共经历了多少个活动，这里我们使用流程定义ID来查询，对应的数据库表为:act_hi_actinst
+     *       问题：HistoricActivityInstance对应哪个表
+     *       问题：HistoricActivityInstance和HistoricTaskInstance有什么区别
+     * @param processInstanceId 历史流程实列id，获取该流程下的用户所有操作活动
+     * @return
+     */
+    public Map<String, Object>  findHisActivitiList(String processInstanceId){
+        List<HistoricActivityInstance> list = processEngine.getHistoryService()
+                .createHistoricActivityInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .list();
+
+        Map<String, Object> temp =  new HashMap<>();
+        if(list != null && list.size()>0){
+            int index = 0;
+            for(HistoricActivityInstance hai : list){
+                Map<String, Object> item =  new HashMap<>();
+                item.put("活动id：",hai.getId());
+                item.put("活动名称：",hai.getActivityName());
+                item.put("活动开始时间：",hai.getStartTime());
+                temp.put("item"+index,item);
+                System.out.println(hai.getId()+"  "+hai.getActivityName());
+                index++;
+            }
+        }
+        Map<String, Object> resultMap =  new HashMap<>();
+        resultMap.put("datas", temp);
+        return resultMap;
+    }
+
+    /**10、查询历史任务 act_hi_taskinst
+     *     查询历史任务，就是查询摸一次流程的执行一共经历了多少个任务，对应表：act_hi_taskinst
+     *
+     * @param processInstanceId 历史流程实列id，获取该流程下的所有用户的历史任务
+     * @return
+     */
+    public Map<String, Object>  findHisTaskList(String processInstanceId){
+        List<HistoricTaskInstance> list = processEngine.getHistoryService()
+                .createHistoricTaskInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .list();
+        Map<String, Object> temp =  new HashMap<>();
+
+        if(list!=null && list.size()>0){
+            int index = 0;
+            for(HistoricTaskInstance hti:list){
+                Map<String, Object> item =  new HashMap<>();
+                item.put("任务id：",hti.getId());
+                item.put("任务名称：",hti.getName());
+                item.put("任务开始时间：",hti.getStartTime());
+                temp.put("item"+index,item);
+                index++;
+            }
+        }
+        Map<String, Object> resultMap =  new HashMap<>();
+        resultMap.put("datas", temp);
+        return resultMap;
+    }
+
+
 
 }

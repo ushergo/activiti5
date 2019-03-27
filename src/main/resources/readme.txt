@@ -1,17 +1,18 @@
-入门文档：
-Activiti（一）SpringBoot2集成Activiti6：
-https://blog.csdn.net/weihao_/article/details/83241662
-Activiti（二）简单请假流程实现：
-https://blog.csdn.net/weihao_/article/details/83242798
+一、入门文档（1、2、3需要同时参考有些地方需要互补才看得懂）：
 
-【Activity学习五】--基于SSM整合Activiti之请假流程实现（二）：
+1、Activiti（一）SpringBoot2集成Activiti6：
+https://blog.csdn.net/weihao_/article/details/83241662
+2、Activiti（二）简单请假流程实现：
+https://blog.csdn.net/weihao_/article/details/83242798
+3、基于SSM整合Activiti之请假流程实现（二）：
 https://blog.csdn.net/u012377333/article/details/79886058
 
-其他参考文档
+二、进阶学习参考文档：
+
 https://blog.csdn.net/zjx86320/article/category/6294649
 
 
-概述
+三、概述
     工作流(workflow)
     为了完成一项任务或事情,需要多个参与者同时或流水式共同完成。
     目前应用比较广泛的行业：物流，办公管理系统
