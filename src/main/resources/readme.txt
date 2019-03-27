@@ -70,12 +70,12 @@ https://blog.csdn.net/zjx86320/article/category/6294649
 
     　　2) act_re_model 流程设计模型部署表
 
-    　　3) act_re_procdef 流程定义数据表
+    　　3) act_re_procdef 已部署的流程定义数据表
 
     运行时数据库表
     　　1) act_ru_execution 运行时流程执行实例表
 
-    　　2) act_ru_identitylink 运行时流程人员表，主要存储任务节点与参与者的相关信息
+    　　2) act_ru_identitylink 运行时用户流程关系表，主要存储任务节点与参与者的相关信息
 
     　　3) act_ru_task 运行时任务节点表
 
@@ -110,7 +110,7 @@ https://blog.csdn.net/zjx86320/article/category/6294649
     　　这四张表很常见，基本的组织机构管理，关于用户认证方面建议还是自己开发一套，组件自带的功能太简单，使用中有很多需求难以满足
 
     通用数据表
-    　　1) act_ge_bytearray 二进制数据表，部署的流程图
+    　　1) act_ge_bytearray 二进制数据表，部署的流程图，就是通用的流程定义和流程资源
 
     　　2) act_ge_property 属性数据表存储整个流程引擎级别的数据,初始化表结构时，会默认插入三条记录
 

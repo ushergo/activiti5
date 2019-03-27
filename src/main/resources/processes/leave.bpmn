@@ -2,7 +2,7 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1553051241855" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
   <process id="leave" isClosed="false" isExecutable="true" name="请假流程" processType="None">
     <startEvent id="_2" name="start"/>
-    <userTask activiti:assignee="{leave.userId}" activiti:exclusive="true" id="_3" name="submit"/>
+    <userTask activiti:assignee="${leave.userId}" activiti:async="false" activiti:exclusive="true" id="_3" name="submit"/>
     <exclusiveGateway gatewayDirection="Unspecified" id="_5" name="result"/>
     <sequenceFlow id="_4" sourceRef="_2" targetRef="_3"/>
     <sequenceFlow id="_6" sourceRef="_3" targetRef="_5"/>
