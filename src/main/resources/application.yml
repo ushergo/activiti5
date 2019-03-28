@@ -3,7 +3,7 @@ mybatis:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/activitifive?useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/activitifive?useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true&allowPublicKeyRetrieval=true
     username: root
     password: Adminmysql1234!
     initsize: 10
@@ -25,3 +25,10 @@ spring:
     #process-definition-location-suffixes: #流程文件格式
     #  - **.bpmn20.xml
     #  - **.bpmn
+server:
+  port: 8081
+#  db=mysql
+#  jdbc.driver=com.mysql.cj.jdbc.Driver
+#  jdbc.url=jdbc:mysql://localhost:3306/activitiDesign?useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true
+#  jdbc.username=root
+#  jdbc.password=Adminmysql1234!

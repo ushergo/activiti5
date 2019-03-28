@@ -7,6 +7,7 @@ import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
@@ -352,6 +353,37 @@ public class LeaveService {
         return resultMap;
     }
 
+    /**11、查询历史流程变量 act_hi_varinst
+     *     查询历史流程变量，就是查询某一次流程的执行一共设置的流程变量，对应表：act_hi_varinst
+     *
+     * @param processInstanceId 历史流程实列id，获取该流程下的所有用户的历史任务
+     * @return
+     */
+    public Map<String, Object>  findHisVariablesList(String processInstanceId){
+
+        List<HistoricVariableInstance> list = processEngine.getHistoryService()
+                .createHistoricVariableInstanceQuery()
+                .processInstanceId(processInstanceId)
+                .list();
+
+        Map<String, Object> temp =  new HashMap<>();
+        List<Map<String, Object>> itemlist = new ArrayList<>();
+
+        if(list != null && list.size()>0){
+            for(HistoricVariableInstance hvi:list){
+                Map<String, Object> item =  new HashMap<>();
+                System.out.println(hvi.getId()+"    "+hvi.getVariableName()+"	"+hvi.getValue());
+                item.put("变量id：",hvi.getId());
+                item.put("变量名称：",hvi.getVariableName());
+                item.put("变量值：",hvi.getValue());
+                itemlist.add(item);
+            }
+        }
+
+        Map<String, Object> resultMap =  new HashMap<>();
+        resultMap.put("datas", itemlist);
+        return resultMap;
+    }
 
 
 }

@@ -3,6 +3,7 @@ package com.example.activitifive.controller;
 
 import com.example.activitifive.model.Leave;
 import com.example.activitifive.service.LeaveService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -138,13 +139,24 @@ public class LeaveController {
 
 
     /**
-     * 9、查询历史任务
+     * 10、查询历史任务
      *
      * @return
      */
     @RequestMapping(value = "/findHisTaskList", method = RequestMethod.GET)
     public Map<String, Object> findHisTaskList(String processInstanceId) {
         Map<String, Object> resultMap = leaveService.findHisTaskList(processInstanceId);
+        return resultMap;
+    }
+
+    /**
+     * 11、查询历史流程变量
+     *
+     * @return
+     */
+    @RequestMapping(value = "/findHisVariablesList", method = RequestMethod.GET)
+    public Map<String, Object> findHisVariablesList(String processInstanceId) {
+        Map<String, Object> resultMap = leaveService.findHisVariablesList(processInstanceId);
         return resultMap;
     }
 }
