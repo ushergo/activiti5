@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/processdef" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1553845139646" name="" targetNamespace="http://www.activiti.org/processdef" typeLanguage="http://www.w3.org/2001/XMLSchema">
+  <process id="receiveTask" isClosed="false" isExecutable="true" name="接收任务" processType="None">
+    <startEvent id="sid-0DD92AF0-F3EA-4B15-82D3-BA0BAA445798"/>
+    <receiveTask activiti:exclusive="true" id="collectSellsAmount" name="汇总当日销售额">
+      <documentation id="collectSellsAmount_D_1"><![CDATA[汇总当日销售额]]></documentation>
+    </receiveTask>
+    <receiveTask activiti:exclusive="true" id="sendMessage" name="给老板发送短信">
+      <documentation id="sendMessage_D_1"><![CDATA[给老板发送短信]]></documentation>
+    </receiveTask>
+    <sequenceFlow id="sid-658ACCD5-A536-4153-B9A6-6485DEC51EE3" sourceRef="sid-0DD92AF0-F3EA-4B15-82D3-BA0BAA445798" targetRef="collectSellsAmount"/>
+    <sequenceFlow id="sid-E714AFCF-EAD9-45F1-9BB8-3BD1F0AC7923" sourceRef="collectSellsAmount" targetRef="sendMessage"/>
+    <endEvent id="sid-65EA413A-B722-4FB0-BE25-000C8B6A3D58"/>
+    <sequenceFlow id="sid-3AF13646-C5E6-4D39-84C8-B902F1A5BDA5" sourceRef="sendMessage" targetRef="sid-65EA413A-B722-4FB0-BE25-000C8B6A3D58"/>
+  </process>
+  <bpmndi:BPMNDiagram documentation="background=#FFFFFF;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
+    <bpmndi:BPMNPlane bpmnElement="receiveTask">
+      <bpmndi:BPMNShape bpmnElement="sid-0DD92AF0-F3EA-4B15-82D3-BA0BAA445798" id="Shape-sid-0DD92AF0-F3EA-4B15-82D3-BA0BAA445798">
+        <omgdc:Bounds height="32.0" width="32.0" x="345.0" y="24.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="collectSellsAmount" id="Shape-collectSellsAmount">
+        <omgdc:Bounds height="80.0" width="100.0" x="310.0" y="105.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="80.0" width="100.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sendMessage" id="Shape-sendMessage">
+        <omgdc:Bounds height="80.0" width="100.0" x="310.0" y="255.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="80.0" width="100.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-65EA413A-B722-4FB0-BE25-000C8B6A3D58" id="Shape-sid-65EA413A-B722-4FB0-BE25-000C8B6A3D58">
+        <omgdc:Bounds height="32.0" width="32.0" x="345.0" y="415.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-658ACCD5-A536-4153-B9A6-6485DEC51EE3" id="BPMNEdge_sid-658ACCD5-A536-4153-B9A6-6485DEC51EE3" sourceElement="sid-0DD92AF0-F3EA-4B15-82D3-BA0BAA445798" targetElement="collectSellsAmount">
+        <omgdi:waypoint x="361.0" y="56.0"/>
+        <omgdi:waypoint x="361.0" y="105.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-E714AFCF-EAD9-45F1-9BB8-3BD1F0AC7923" id="BPMNEdge_sid-E714AFCF-EAD9-45F1-9BB8-3BD1F0AC7923" sourceElement="collectSellsAmount" targetElement="sendMessage">
+        <omgdi:waypoint x="360.0" y="185.0"/>
+        <omgdi:waypoint x="360.0" y="255.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-3AF13646-C5E6-4D39-84C8-B902F1A5BDA5" id="BPMNEdge_sid-3AF13646-C5E6-4D39-84C8-B902F1A5BDA5" sourceElement="sendMessage" targetElement="sid-65EA413A-B722-4FB0-BE25-000C8B6A3D58">
+        <omgdi:waypoint x="361.0" y="335.0"/>
+        <omgdi:waypoint x="361.0" y="415.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
