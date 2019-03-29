@@ -26,7 +26,7 @@ spring:
     #  - **.bpmn20.xml
     #  - **.bpmn
 server:
-  port: 8081
+  port: 8080
 #  db=mysql
 #  jdbc.driver=com.mysql.cj.jdbc.Driver
 #  jdbc.url=jdbc:mysql://localhost:3306/activitiDesign?useUnicode=true&characterEncoding=utf8&useSSL=false&allowMultiQueries=true

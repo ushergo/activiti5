@@ -157,7 +157,7 @@ public class LeaveService {
         //获取任务服务对象
         TaskService taskService = processEngine.getTaskService();
         //根据接受人获取该用户的任务 //通过当前任务办理人 userId 获取任务列表
-        List<Task> tasks = taskService.createTaskQuery()
+        List<Task> tasks = taskService.createTaskQuery().processDefinitionKey("leave")
                 .taskAssignee(userId) //获取的就是设置用户图标的assignee值！！
                 .list();
 
@@ -196,7 +196,7 @@ public class LeaveService {
      *
      */
     public Map<String, Object> apply(@RequestBody Leave leave) {
-        Task task = taskService.createTaskQuery().taskId(leave.getTaskId()).singleResult();
+        Task task = taskService.createTaskQuery().processDefinitionKey("leave").taskId(leave.getTaskId()).singleResult();
         Map<String, Object> vars = new HashMap<>();
         Leave origin = (Leave) taskService.getVariable(leave.getTaskId(), "leave");
         origin.setDesc(leave.getDesc());
@@ -225,7 +225,7 @@ public class LeaveService {
 
         System.out.println("TaskId = "+leave.getTaskId());
 
-        Task task = taskService.createTaskQuery().taskId(leave.getTaskId()).singleResult();
+        Task task = taskService.createTaskQuery().processDefinitionKey("leave").taskId(leave.getTaskId()).singleResult();
         Map<String, Object> vars = new HashMap<>();
         Leave origin = (Leave) taskService.getVariable(leave.getTaskId(), "leave");
         origin.setApproveDesc1(leave.getApproveDesc1());
@@ -248,7 +248,7 @@ public class LeaveService {
      *  @1、复审主管审核后，清空该任务对应的所有运行时的数据： ACT_RU_TASK、ACT_RU_VARIABLE、ACT_RU_EXECUTION、ACT_RU_IDENTITYLINK
      */
     public Map<String, Object> approve2(@RequestBody Leave leave) {
-        Task task = taskService.createTaskQuery().taskId(leave.getTaskId()).singleResult();
+        Task task = taskService.createTaskQuery().processDefinitionKey("leave").taskId(leave.getTaskId()).singleResult();
         Map<String, Object> vars = new HashMap<>();
         Leave origin = (Leave) taskService.getVariable(leave.getTaskId(), "leave");
         origin.setApproveDesc2(leave.getApproveDesc2());
@@ -306,17 +306,15 @@ public class LeaveService {
                 .processInstanceId(processInstanceId)
                 .list();
 
-        Map<String, Object> temp =  new HashMap<>();
+        List<  Map<String, Object>> temp = new ArrayList<>();
         if(list != null && list.size()>0){
-            int index = 0;
             for(HistoricActivityInstance hai : list){
                 Map<String, Object> item =  new HashMap<>();
                 item.put("活动id：",hai.getId());
                 item.put("活动名称：",hai.getActivityName());
                 item.put("活动开始时间：",hai.getStartTime());
-                temp.put("item"+index,item);
+                temp.add(item);
                 System.out.println(hai.getId()+"  "+hai.getActivityName());
-                index++;
             }
         }
         Map<String, Object> resultMap =  new HashMap<>();
@@ -335,17 +333,15 @@ public class LeaveService {
                 .createHistoricTaskInstanceQuery()
                 .processInstanceId(processInstanceId)
                 .list();
-        Map<String, Object> temp =  new HashMap<>();
 
+        List<  Map<String, Object>> temp = new ArrayList<>();
         if(list!=null && list.size()>0){
-            int index = 0;
             for(HistoricTaskInstance hti:list){
                 Map<String, Object> item =  new HashMap<>();
                 item.put("任务id：",hti.getId());
                 item.put("任务名称：",hti.getName());
                 item.put("任务开始时间：",hti.getStartTime());
-                temp.put("item"+index,item);
-                index++;
+                temp.add(item);
             }
         }
         Map<String, Object> resultMap =  new HashMap<>();
@@ -366,9 +362,7 @@ public class LeaveService {
                 .processInstanceId(processInstanceId)
                 .list();
 
-        Map<String, Object> temp =  new HashMap<>();
         List<Map<String, Object>> itemlist = new ArrayList<>();
-
         if(list != null && list.size()>0){
             for(HistoricVariableInstance hvi:list){
                 Map<String, Object> item =  new HashMap<>();
