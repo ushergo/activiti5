@@ -4,10 +4,7 @@ import com.example.activitifive.model.Buyer;
 import com.example.activitifive.model.Seller;
 import com.example.activitifive.model.Shopping;
 import com.example.activitifive.utils.ReflectionExecutor;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
@@ -29,26 +26,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class ProcessHelper {
 
     private  String processDefId;
     private  String processDefKey;
 
-    public ProcessHelper(String processDefId,String processDefKey){
-      this.processDefId = processDefId;
-      this.processDefKey = processDefKey;
+    private ProcessEngine processEngine;
+    private TaskService taskService;
+    private RuntimeService runtimeService;
+    ReflectionExecuteHelper reflectionExecuteHelper = new ReflectionExecuteHelper(); //执行中间操作辅助类
+
+    public ProcessHelper(String processDefId,String processDefKey)
+    {
+
+        this.processDefId = processDefId;
+        this.processDefKey = processDefKey;
+
+        //流程引擎对象
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        this.processEngine = processEngine;
+        this.taskService = processEngine.getTaskService();
+        this.runtimeService = processEngine.getRuntimeService();
     }
 
-    @Resource
-    private ProcessEngine processEngine;
-    @Resource
-    private TaskService taskService;
-    @Resource
-    private RuntimeService runtimeService;
-
-    @Autowired
-    ReflectionExecuteHelper reflectionExecuteHelper; //执行中间操作辅助类
 
     /**
      * 1、部署流程
@@ -218,7 +218,7 @@ public class ProcessHelper {
 
             //向后执行一步
             processEngine.getRuntimeService()
-                    .signal(execution.getId());
+                    .signal(execution.getId(),vars); //流程向后走一步。同时设置流程变量：往后推移e。使用singnal给流程引擎信号，告诉他当前任务已经完成
 
         }catch (Exception e){
             reslut =false;

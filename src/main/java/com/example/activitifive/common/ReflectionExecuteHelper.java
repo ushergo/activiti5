@@ -5,6 +5,7 @@ import com.example.activitifive.utils.ReflectionExecutor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 public class ReflectionExecuteHelper {
 
@@ -18,7 +19,8 @@ public class ReflectionExecuteHelper {
             System.out.println("截取的方法名:"+method);
             try {
                 Class<?> t_class =  Class.forName(classz);
-                Method m = t_class.getDeclaredMethod(method, String.class);
+                Method m = t_class.getDeclaredMethod(method, Map.class);
+//                Method mm = t_class.getMethod(method, Map.class);
                 Object object = m.invoke(t_class.newInstance(),test.getFunctionValue());
                 System.out.println(object);
             } catch (ClassNotFoundException e) {
